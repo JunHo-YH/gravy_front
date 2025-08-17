@@ -10,7 +10,7 @@ import {
   ErrorResponse
 } from '../types/auth';
 
-const BASE_URL = process.env.NODE_ENV === 'development' ? '/api' : 'https://gravy.kr';
+const BASE_URL = process.env.NODE_ENV === 'development' ? '/api' : 'https://dev.gravy.kr';
 
 export class ApiError extends Error {
   public code: string;
