@@ -15,7 +15,7 @@ const schema = yup.object().shape({
     .required('닉네임을 입력해주세요'),
   password: yup.string()
     .min(8, '비밀번호는 8자 이상이어야 합니다')
-    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/, 
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&~^#<>])[A-Za-z\d@$!%*?&~^#<>]/, 
       '대문자, 소문자, 숫자, 특수문자를 각각 1개 이상 포함해야 합니다')
     .required('비밀번호를 입력해주세요'),
   confirmPassword: yup.string()
@@ -62,7 +62,7 @@ export const SignUpStep3: React.FC<SignUpStep3Props> = ({
     if (/[a-z]/.test(pwd)) score++;
     if (/[A-Z]/.test(pwd)) score++;
     if (/\d/.test(pwd)) score++;
-    if (/[@$!%*?&]/.test(pwd)) score++;
+    if (/[@$!%*?&~^#<>]/.test(pwd)) score++;
 
     const levels = [
       { score: 0, text: '', color: '' },
@@ -133,7 +133,7 @@ export const SignUpStep3: React.FC<SignUpStep3Props> = ({
             {...register('password')}
             type={showPassword ? 'text' : 'password'}
             label="비밀번호"
-            placeholder="8자 이상, 대소문자+숫자+특수문자"
+            placeholder="8자 이상, 대소문자+숫자+특수문자(@$!%*?&~^#<>)"
             error={errors.password?.message}
             autoComplete="new-password"
           />
