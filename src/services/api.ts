@@ -106,6 +106,27 @@ const handleResponse = async <T>(response: Response): Promise<T> => {
   return {} as T;
 };
 
+// 헤더에서 쿠키 추출 함수
+const extractTokensFromResponse = (response: Response): { accessToken?: string; refreshToken?: string } => {
+  const setCookieHeaders = response.headers.get('set-cookie');
+  if (!setCookieHeaders) return {};
+  
+  const cookies = setCookieHeaders.split(',');
+  let accessToken: string | undefined;
+  let refreshToken: string | undefined;
+  
+  cookies.forEach(cookie => {
+    const trimmedCookie = cookie.trim();
+    if (trimmedCookie.startsWith('access_token=')) {
+      accessToken = trimmedCookie.split('=')[1].split(';')[0];
+    } else if (trimmedCookie.startsWith('refresh_token=')) {
+      refreshToken = trimmedCookie.split('=')[1].split(';')[0];
+    }
+  });
+  
+  return { accessToken, refreshToken };
+};
+
 // 인증된 API 호출 (자동 토큰 갱신 포함)
 const authenticatedApiCall = async (url: string, options: RequestInit = {}): Promise<Response> => {
   let response = await apiCall(url, options);
@@ -145,9 +166,8 @@ export const removeTokenCookie = (name: string): void => {
 // API 함수들
 export const checkEmailDuplicate = async (request: EmailDuplicateRequest): Promise<void> => {
   console.log('API 호출: 이메일 중복 확인', request);
-  const response = await apiCall('/email/duplicate', {
-    method: 'POST',
-    body: JSON.stringify(request)
+  const response = await apiCall(`/api/v1/users/email/${encodeURIComponent(request.email)}/availability`, {
+    method: 'GET'
   });
   console.log('이메일 중복 확인 응답:', response.status, response.statusText);
   
@@ -156,7 +176,7 @@ export const checkEmailDuplicate = async (request: EmailDuplicateRequest): Promi
 
 export const sendVerificationCode = async (request: VerificationCodeSendRequest): Promise<void> => {
   console.log('API 호출: 인증번호 발송', request);
-  const response = await apiCall('/email/verification-code/send', {
+  const response = await apiCall('/api/v1/email-verifications', {
     method: 'POST',
     body: JSON.stringify(request)
   });
@@ -167,8 +187,8 @@ export const sendVerificationCode = async (request: VerificationCodeSendRequest)
 
 export const verifyEmailCode = async (request: VerificationCodeVerifyRequest): Promise<VerificationCodeVerifyResponse> => {
   console.log('인증번호 검증 요청:', request);
-  const response = await apiCall('/email/verification-code/verify', {
-    method: 'POST',
+  const response = await apiCall('/api/v1/email-verifications/status', {
+    method: 'PUT',
     body: JSON.stringify(request)
   });
   
@@ -183,7 +203,7 @@ export const verifyEmailCode = async (request: VerificationCodeVerifyRequest): P
 };
 
 export const signUp = async (request: SignUpRequest): Promise<void> => {
-  const response = await apiCall('/user/signup', {
+  const response = await apiCall('/api/v1/users', {
     method: 'POST',
     body: JSON.stringify(request)
   });
@@ -192,26 +212,50 @@ export const signUp = async (request: SignUpRequest): Promise<void> => {
 };
 
 export const login = async (request: LoginRequest): Promise<LoginResponse> => {
-  const response = await apiCall('/user/login', {
+  const response = await apiCall('/api/v1/auth/tokens', {
     method: 'POST',
     body: JSON.stringify(request)
   });
   
-  return handleResponse(response);
+  // 서버가 헤더로 토큰을 반환하므로 Set-Cookie 헤더에서 쿠키 추출
+  const tokens = extractTokensFromResponse(response);
+  
+  // 쿠키에 토큰 저장
+  if (tokens.accessToken) {
+    setTokenCookie('access_token', tokens.accessToken, 1800); // 30분
+  }
+  if (tokens.refreshToken) {
+    setTokenCookie('refresh_token', tokens.refreshToken, 604800); // 7일
+  }
+  
+  // 기존 LoginResponse 형식으로 반환
+  return {
+    accessToken: tokens.accessToken || '',
+    refreshToken: tokens.refreshToken || ''
+  };
 };
 
 export const refreshAccessToken = async (): Promise<RefreshTokenResponse> => {
-  const response = await apiCall('/user/reissue/access-token', {
+  const response = await apiCall('/api/v1/auth/tokens/reissue', {
     method: 'POST'
   });
   
-  const data = await handleResponse<RefreshTokenResponse>(response);
+  // 서버가 헤더로 토큰을 반환하므로 Set-Cookie 헤더에서 쿠키 추출
+  const tokens = extractTokensFromResponse(response);
   
-  // 새 토큰으로 쿠키 업데이트
-  setTokenCookie('access_token', data.accessToken, 1800); // 30분
-  setTokenCookie('refresh_token', data.refreshToken, 604800); // 7일
+  // 쿠키에 토큰 저장
+  if (tokens.accessToken) {
+    setTokenCookie('access_token', tokens.accessToken, 1800); // 30분
+  }
+  if (tokens.refreshToken) {
+    setTokenCookie('refresh_token', tokens.refreshToken, 604800); // 7일
+  }
   
-  return data;
+  // 기존 RefreshTokenResponse 형식으로 반환
+  return {
+    accessToken: tokens.accessToken || '',
+    refreshToken: tokens.refreshToken || ''
+  };
 };
 
 export const healthCheck = async (): Promise<string> => {
