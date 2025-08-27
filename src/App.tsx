@@ -2,7 +2,9 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { ProtectedRoute } from './components/common/ProtectedRoute';
-import { Home } from './pages/Home';
+import { PublicRoute } from './components/common/PublicRoute';
+import { Landing } from './pages/Landing';
+import { Dashboard } from './pages/Dashboard';
 import { Login } from './pages/Login';
 import { SignUp } from './pages/SignUp';
 
@@ -13,13 +15,22 @@ function App() {
         <div className="App">
           <Routes>
             {/* 공개 경로 */}
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<SignUp />} />
+            <Route path="/" element={<Landing />} />
+            <Route path="/login" element={
+              <PublicRoute>
+                <Login />
+              </PublicRoute>
+            } />
+            <Route path="/signup" element={
+              <PublicRoute>
+                <SignUp />
+              </PublicRoute>
+            } />
             
             {/* 보호된 경로 */}
-            <Route path="/" element={
+            <Route path="/dashboard" element={
               <ProtectedRoute>
-                <Home />
+                <Dashboard />
               </ProtectedRoute>
             } />
             

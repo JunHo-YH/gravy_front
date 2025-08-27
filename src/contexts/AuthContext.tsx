@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef, ReactNode } from 'react';
 import { AuthContextType, User, LoginResponse } from '../types/auth';
-import { setTokenCookie, removeTokenCookie, getTokenFromCookie } from '../services/api';
+import { logout as apiLogout } from '../services/api';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -19,33 +19,60 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const hasInitialized = useRef(false);
 
   useEffect(() => {
-    // 초기화 시 토큰 확인
-    const accessToken = getTokenFromCookie('access_token');
-    const refreshToken = getTokenFromCookie('refresh_token');
-    
-    if (accessToken && refreshToken) {
-      // 토큰이 있으면 인증된 상태로 설정
-      // 실제로는 토큰 검증 API를 호출해야 하지만, 현재는 단순화
-      setUser({ nickname: '사용자', email: 'user@example.com' });
+    // 이미 초기화되었으면 중복 실행 방지
+    if (hasInitialized.current) {
+      return;
     }
-    
-    setLoading(false);
-  }, []);
+
+    hasInitialized.current = true;
+    console.log('🔍 AuthContext: 인증 상태 확인 시작 (1회만)');
+
+    const checkAuthStatus = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/api/v1/auth/test', {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (response.ok) {
+          setUser({ nickname: '사용자', email: 'user@example.com' });
+          console.log('✅ AuthContext: 인증 성공');
+        } else {
+          setUser(null);
+          console.log('❌ AuthContext: 인증 실패');
+        }
+      } catch (error) {
+        console.log('❌ AuthContext: 인증 확인 실패:', error);
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkAuthStatus();
+  }, []);  
 
   const login = (tokens: LoginResponse) => {
-    setTokenCookie('access_token', tokens.accessToken, 1800); // 30분
-    setTokenCookie('refresh_token', tokens.refreshToken, 604800); // 7일
-    
-    // 실제로는 토큰에서 사용자 정보를 디코딩해야 함
+    // 서버에서 HttpOnly 쿠키로 토큰을 설정했으므로
+    // 클라이언트는 단순히 사용자 상태만 업데이트
     setUser({ nickname: '사용자', email: 'user@example.com' });
   };
 
-  const logout = () => {
-    removeTokenCookie('access_token');
-    removeTokenCookie('refresh_token');
-    setUser(null);
+  const logout = async () => {
+    try {
+      // 서버 로그아웃 API 호출 및 쿠키 삭제
+      await apiLogout();
+      setUser(null);
+      console.log('✅ 로그아웃 완료');
+    } catch (error) {
+      console.error('로그아웃 에러:', error);
+      // 에러가 발생해도 로컬 상태는 삭제
+      setUser(null);
+    }
   };
 
   const value: AuthContextType = {

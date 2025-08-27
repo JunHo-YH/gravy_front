@@ -1,11 +1,53 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { LogOut, Gavel, TrendingUp, Users, Clock } from 'lucide-react';
+import { LogOut, Gavel, TrendingUp, Users, Clock, TestTube } from 'lucide-react';
 import { Button } from '../components/common/Button';
 import { Card } from '../components/common/Card';
+import { testAuthToken } from '../services/api';
 
-export const Home: React.FC = () => {
+export const Dashboard: React.FC = () => {
   const { user, logout } = useAuth();
+  const [isTestLoading, setIsTestLoading] = useState(false);
+  const [currentNotifications, setCurrentNotifications] = useState<number[]>([0, 1, 2]);
+
+  // 알림 데이터
+  const notifications = [
+    { type: 'warning', message: '"빈티지 카메라" 경매가 5분 후 마감됩니다.', bgColor: 'bg-yellow-50', borderColor: 'border-yellow-200', textColor: 'text-yellow-800' },
+    { type: 'success', message: '"스마트폰 케이스" 경매에서 낙찰되었습니다!', bgColor: 'bg-green-50', borderColor: 'border-green-200', textColor: 'text-green-800' },
+    { type: 'info', message: '새로운 "전자기기" 카테고리 경매가 시작되었습니다.', bgColor: 'bg-blue-50', borderColor: 'border-blue-200', textColor: 'text-blue-800' },
+    { type: 'warning', message: '"한정판 운동화" 경매가 2분 후 마감됩니다.', bgColor: 'bg-yellow-50', borderColor: 'border-yellow-200', textColor: 'text-yellow-800' },
+    { type: 'success', message: '"무선 이어폰" 경매에서 입찰에 성공했습니다!', bgColor: 'bg-green-50', borderColor: 'border-green-200', textColor: 'text-green-800' },
+    { type: 'info', message: '"의류" 카테고리에 새 경매 3건이 등록되었습니다.', bgColor: 'bg-blue-50', borderColor: 'border-blue-200', textColor: 'text-blue-800' },
+    { type: 'warning', message: '"클래식 시계" 경매가 30초 후 마감됩니다!', bgColor: 'bg-yellow-50', borderColor: 'border-yellow-200', textColor: 'text-yellow-800' },
+    { type: 'success', message: '"게임 콘솔" 경매가 성공적으로 종료되었습니다.', bgColor: 'bg-green-50', borderColor: 'border-green-200', textColor: 'text-green-800' },
+    { type: 'info', message: '"가전제품" 카테고리 특가 경매가 오픈되었습니다.', bgColor: 'bg-blue-50', borderColor: 'border-blue-200', textColor: 'text-blue-800' },
+    { type: 'warning', message: '"프리미엄 가방" 경매가 1분 후 마감됩니다.', bgColor: 'bg-yellow-50', borderColor: 'border-yellow-200', textColor: 'text-yellow-800' }
+  ];
+
+  // 3초마다 알림 순환
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentNotifications(prev => {
+        const nextIndices = prev.map(index => (index + 1) % notifications.length);
+        return nextIndices;
+      });
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [notifications.length]);
+  
+  const handleTestClick = async () => {
+    setIsTestLoading(true);
+    try {
+      await testAuthToken();
+      alert('✅ 토큰 전달 테스트 성공!');
+    } catch (error) {
+      console.error('테스트 에러:', error);
+      alert('❌ 토큰 전달 테스트 실패: ' + (error instanceof Error ? error.message : '알 수 없는 오류'));
+    } finally {
+      setIsTestLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-yellow-50">
@@ -23,7 +65,16 @@ export const Home: React.FC = () => {
             
             <div className="flex items-center space-x-4">
               <span className="text-gray-700">환영합니다, {user?.nickname}님!</span>
-              <Button variant="outline" onClick={logout} size="sm">
+              <Button 
+                variant="outline" 
+                onClick={handleTestClick} 
+                size="sm"
+                loading={isTestLoading}
+              >
+                <TestTube className="w-4 h-4 mr-2" />
+                API 테스트
+              </Button>
+              <Button variant="outline" onClick={() => logout()} size="sm">
                 <LogOut className="w-4 h-4 mr-2" />
                 로그아웃
               </Button>
@@ -101,22 +152,33 @@ export const Home: React.FC = () => {
 
           <Card>
             <h3 className="text-xl font-semibold text-gray-900 mb-4">알림</h3>
-            <div className="space-y-3">
-              <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                <p className="text-sm text-yellow-800">
-                  <strong>"빈티지 카메라"</strong> 경매가 5분 후 마감됩니다.
-                </p>
-              </div>
-              <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
-                <p className="text-sm text-green-800">
-                  <strong>"스마트폰 케이스"</strong> 경매에서 낙찰되었습니다!
-                </p>
-              </div>
-              <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                <p className="text-sm text-blue-800">
-                  새로운 <strong>"전자기기"</strong> 카테고리 경매가 시작되었습니다.
-                </p>
-              </div>
+            <div className="space-y-3 overflow-hidden">
+              {currentNotifications.map((notificationIndex, displayIndex) => {
+                const notification = notifications[notificationIndex];
+                return (
+                  <div 
+                    key={`${notificationIndex}-${displayIndex}`}
+                    className={`p-3 border rounded-lg transition-all duration-700 ease-out transform animate-in slide-in-from-bottom-2 fade-in ${notification.bgColor} ${notification.borderColor}`}
+                    style={{
+                      animationDelay: `${displayIndex * 100}ms`,
+                      animationDuration: '700ms',
+                      animationFillMode: 'both'
+                    }}
+                  >
+                    <p className={`text-sm ${notification.textColor} transition-opacity duration-700`}>
+                      {notification.message.includes('"') ? (
+                        <>
+                          {notification.message.split('"')[0]}
+                          <strong>"{notification.message.split('"')[1]}"</strong>
+                          {notification.message.split('"').slice(2).join('"')}
+                        </>
+                      ) : (
+                        notification.message
+                      )}
+                    </p>
+                  </div>
+                );
+              })}
             </div>
           </Card>
         </div>

@@ -7,10 +7,24 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://dev.gravy.kr',
+        target: 'http://localhost:8080',
         changeOrigin: true,
-        secure: true,
-        rewrite: (path) => path.replace(/^\/api/, '')
+        secure: false,
+        rewrite: (path) => {
+          console.log('🔄 Vite 프록시 rewrite:', path, '->', path.replace(/^\/api/, ''));
+          return path.replace(/^\/api/, '');
+        },
+        configure: (proxy, _options) => {
+          proxy.on('error', (err, _req, _res) => {
+            console.log('❌ Vite 프록시 에러:', err);
+          });
+          proxy.on('proxyReq', (proxyReq, req, _res) => {
+            console.log('➡️ Vite 프록시 요청:', req.method, req.url, '->', proxyReq.path);
+          });
+          proxy.on('proxyRes', (proxyRes, req, _res) => {
+            console.log('⬅️ Vite 프록시 응답:', req.url, proxyRes.statusCode);
+          });
+        }
       }
     }
   }

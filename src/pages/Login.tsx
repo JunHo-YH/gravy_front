@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -24,7 +23,6 @@ export const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState<string>('');
   const [showPassword, setShowPassword] = useState(false);
-  const navigate = useNavigate();
   const { login: authLogin } = useAuth();
 
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
@@ -36,10 +34,14 @@ export const Login: React.FC = () => {
     setServerError('');
 
     try {
+      console.log('🔐 로그인 시도:', data);
       const response = await login(data);
+      console.log('✅ 로그인 성공:', response);
       authLogin(response);
-      navigate('/');
+      // navigate 대신 window.location을 사용하여 완전히 새로고침
+      window.location.href = '/dashboard';
     } catch (error) {
+      console.error('❌ 로그인 실패:', error);
       if (error instanceof ApiError) {
         setServerError(error.message);
       } else {

@@ -6,11 +6,10 @@ import {
   SignUpRequest,
   LoginRequest,
   LoginResponse,
-  RefreshTokenResponse,
   ErrorResponse
 } from '../types/auth';
 
-const BASE_URL = process.env.NODE_ENV === 'development' ? '/api' : 'https://dev.gravy.kr';
+const BASE_URL = import.meta.env.DEV ? 'http://localhost:8080' : 'https://dev.gravy.kr';
 
 export class ApiError extends Error {
   public code: string;
@@ -35,7 +34,7 @@ const apiCall = async (url: string, options: RequestInit = {}): Promise<Response
   try {
     const response = await fetch(fullUrl, {
       ...options,
-      credentials: 'include', // 쿠키 포함 필수
+      credentials: 'include', // 쿠키 포함 및 CORS 쿠키 설정 허용
       headers: {
         'Content-Type': 'application/json',
         ...options.headers
@@ -106,62 +105,10 @@ const handleResponse = async <T>(response: Response): Promise<T> => {
   return {} as T;
 };
 
-// 헤더에서 쿠키 추출 함수
-const extractTokensFromResponse = (response: Response): { accessToken?: string; refreshToken?: string } => {
-  const setCookieHeaders = response.headers.get('set-cookie');
-  if (!setCookieHeaders) return {};
-  
-  const cookies = setCookieHeaders.split(',');
-  let accessToken: string | undefined;
-  let refreshToken: string | undefined;
-  
-  cookies.forEach(cookie => {
-    const trimmedCookie = cookie.trim();
-    if (trimmedCookie.startsWith('access_token=')) {
-      accessToken = trimmedCookie.split('=')[1].split(';')[0];
-    } else if (trimmedCookie.startsWith('refresh_token=')) {
-      refreshToken = trimmedCookie.split('=')[1].split(';')[0];
-    }
-  });
-  
-  return { accessToken, refreshToken };
-};
+// HttpOnly 쿠키는 서버에서 완전히 관리됨
+// 브라우저가 자동으로 Set-Cookie 헤더를 처리하여 HttpOnly 쿠키를 설정/삭제
 
-// 인증된 API 호출 (자동 토큰 갱신 포함)
-const authenticatedApiCall = async (url: string, options: RequestInit = {}): Promise<Response> => {
-  let response = await apiCall(url, options);
-  
-  // 401 Unauthorized 시 토큰 재발급 후 재시도
-  if (response.status === 401) {
-    try {
-      await refreshAccessToken();
-      response = await apiCall(url, options); // 재시도
-    } catch (error) {
-      // 토큰 갱신 실패 시 로그인 페이지로 리다이렉트
-      window.location.href = '/login';
-      throw error;
-    }
-  }
-  
-  return response;
-};
 
-// 토큰 관리 함수들
-export const getTokenFromCookie = (name: string): string | null => {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop()?.split(';').shift() || null;
-  return null;
-};
-
-export const setTokenCookie = (name: string, token: string, maxAge: number): void => {
-  const isSecure = window.location.protocol === 'https:';
-  document.cookie = `${name}=${token}; path=/; ${isSecure ? 'secure;' : ''} samesite=strict; max-age=${maxAge}`;
-};
-
-export const removeTokenCookie = (name: string): void => {
-  document.cookie = `${name}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
-};
 
 // API 함수들
 export const checkEmailDuplicate = async (request: EmailDuplicateRequest): Promise<void> => {
@@ -212,53 +159,58 @@ export const signUp = async (request: SignUpRequest): Promise<void> => {
 };
 
 export const login = async (request: LoginRequest): Promise<LoginResponse> => {
+  console.log('🔐 로그인 시도:', request);
   const response = await apiCall('/api/v1/auth/tokens', {
     method: 'POST',
     body: JSON.stringify(request)
   });
   
-  // 서버가 헤더로 토큰을 반환하므로 Set-Cookie 헤더에서 쿠키 추출
-  const tokens = extractTokensFromResponse(response);
+  console.log('🎯 로그인 응답 상태:', response.status, response.statusText);
   
-  // 쿠키에 토큰 저장
-  if (tokens.accessToken) {
-    setTokenCookie('access_token', tokens.accessToken, 1800); // 30분
-  }
-  if (tokens.refreshToken) {
-    setTokenCookie('refresh_token', tokens.refreshToken, 604800); // 7일
-  }
+  // handleResponse를 통해 에러 응답이 처리됨
+  // 여기까지 도달했다면 로그인 성공
+  await handleResponse(response);
   
-  // 기존 LoginResponse 형식으로 반환
+  // 브라우저가 자동으로 Set-Cookie 헤더를 처리하여 HttpOnly 쿠키를 설정
+  console.log('✅ 로그인 성공 - 브라우저가 HttpOnly 쿠키 자동 설정');
+  
   return {
-    accessToken: tokens.accessToken || '',
-    refreshToken: tokens.refreshToken || ''
+    accessToken: 'stored_in_httponly_cookie',
+    refreshToken: 'stored_in_httponly_cookie'
   };
 };
 
-export const refreshAccessToken = async (): Promise<RefreshTokenResponse> => {
-  const response = await apiCall('/api/v1/auth/tokens/reissue', {
+
+export const logout = async (): Promise<void> => {
+  console.log('🚪 로그아웃 시작...');
+  
+  // 서버에서 HttpOnly 쿠키 삭제 및 로그아웃 처리
+  const response = await apiCall('/api/v1/auth/tokens', {
+    method: 'DELETE'
+  });
+  
+  console.log('🚪 로그아웃 응답:', response.status, response.statusText);
+  
+  if (!response.ok) {
+    throw new Error(`로그아웃 실패: ${response.status} ${response.statusText}`);
+  }
+  
+  console.log('✅ 로그아웃 성공 - 서버에서 HttpOnly 쿠키 삭제 완료');
+};
+
+
+export const testAuthToken = async (): Promise<void> => {
+  console.log('🧪 토큰 전달 테스트 시작...');
+  const response = await apiCall('/api/v1/auth/test', {
     method: 'POST'
   });
   
-  // 서버가 헤더로 토큰을 반환하므로 Set-Cookie 헤더에서 쿠키 추출
-  const tokens = extractTokensFromResponse(response);
+  console.log('🧪 테스트 응답:', response.status, response.statusText);
   
-  // 쿠키에 토큰 저장
-  if (tokens.accessToken) {
-    setTokenCookie('access_token', tokens.accessToken, 1800); // 30분
-  }
-  if (tokens.refreshToken) {
-    setTokenCookie('refresh_token', tokens.refreshToken, 604800); // 7일
+  if (!response.ok) {
+    throw new Error(`테스트 실패: ${response.status} ${response.statusText}`);
   }
   
-  // 기존 RefreshTokenResponse 형식으로 반환
-  return {
-    accessToken: tokens.accessToken || '',
-    refreshToken: tokens.refreshToken || ''
-  };
+  console.log('✅ 토큰 전달 테스트 성공');
 };
 
-export const healthCheck = async (): Promise<string> => {
-  const response = await apiCall('/ping');
-  return response.text();
-};
