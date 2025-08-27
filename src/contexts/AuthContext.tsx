@@ -2,6 +2,8 @@ import React, { createContext, useContext, useState, useEffect, useRef, ReactNod
 import { AuthContextType, User, LoginResponse } from '../types/auth';
 import { logout as apiLogout } from '../services/api';
 
+const BASE_URL = import.meta.env.DEV ? 'http://localhost:8080' : 'https://dev.gravy.kr';
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const useAuth = (): AuthContextType => {
@@ -32,7 +34,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     const checkAuthStatus = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/v1/auth/test', {
+        const response = await fetch(`${BASE_URL}/api/v1/auth/test`, {
           method: 'POST',
           credentials: 'include',
           headers: { 'Content-Type': 'application/json' }
