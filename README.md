@@ -1,6 +1,6 @@
 # 🏆 Gravy - 실시간 경매 플랫폼
 
-> **현대적인 웹 기술로 구현한 실시간 경매 서비스**
+> **Gravy 실시간 경매 서비스**
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
@@ -23,10 +23,10 @@
 ## ✨ 주요 기능
 
 ### 🔔 실시간 알림 시스템
-- 경매 마감 임박 알림 (⏰ 빨간색)
-- 낙찰 성공 알림 (🎉 초록색) 
-- 새 경매 등록 알림 (📱 파란색)
-
+- ⏰ 경매 마감 임박 알림 (🔴 빨간색)
+- 🎉 낙찰 성공 알림 (🟢 초록색) 
+- 🕊 새 경매 등록 알림 (🔵 파란색)
+️
 ### 📊 대시보드
 - 실시간 경매 현황 통계
 - 애니메이션이 적용된 카운터
