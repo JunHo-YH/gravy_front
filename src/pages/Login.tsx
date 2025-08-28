@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { LogIn, Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { LogIn, Mail, Eye, EyeOff } from 'lucide-react';
 import { Card } from '../components/common/Card';
 import { Input } from '../components/common/Input';
 import { Button } from '../components/common/Button';
@@ -37,7 +38,7 @@ export const Login: React.FC = () => {
       console.log('🔐 로그인 시도:', data);
       const response = await login(data);
       console.log('✅ 로그인 성공:', response);
-      authLogin(response);
+      authLogin();
       // navigate 대신 window.location을 사용하여 완전히 새로고침
       window.location.href = '/dashboard';
     } catch (error) {
@@ -56,9 +57,11 @@ export const Login: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-yellow-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-yellow-500 to-amber-500 bg-clip-text text-transparent mb-2">
-            Gravy
-          </h1>
+          <Link to="/">
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-yellow-500 to-amber-500 bg-clip-text text-transparent mb-2 hover:opacity-80 transition-opacity cursor-pointer">
+              Gravy
+            </h1>
+          </Link>
           <p className="text-gray-600">실시간 경매 거래 플랫폼</p>
         </div>
 

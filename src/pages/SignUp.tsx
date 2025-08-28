@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Card } from '../components/common/Card';
 import { SignUpStep1 } from '../components/auth/SignUpStep1';
 import { SignUpStep2 } from '../components/auth/SignUpStep2';
@@ -64,9 +64,11 @@ export const SignUp: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-yellow-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-yellow-500 to-amber-500 bg-clip-text text-transparent mb-2">
-            Gravy
-          </h1>
+          <Link to="/">
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-yellow-500 to-amber-500 bg-clip-text text-transparent mb-2 hover:opacity-80 transition-opacity cursor-pointer">
+              Gravy
+            </h1>
+          </Link>
           <p className="text-gray-600">실시간 경매 거래 플랫폼</p>
         </div>
 

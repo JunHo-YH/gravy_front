@@ -1,12 +1,37 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { LogIn, UserPlus, Gavel, TrendingUp, Users, Shield } from 'lucide-react';
+import { LogIn, UserPlus, Gavel, TrendingUp, Shield } from 'lucide-react';
 import { Button } from '../components/common/Button';
 import { Card } from '../components/common/Card';
+import { LandingNotificationSection } from '../components/landing/LandingNotificationSection';
 import { useAuth } from '../contexts/AuthContext';
+import { useCountUp } from '../hooks/useCountUp';
 
 export const Landing: React.FC = () => {
   const { isAuthenticated, loading } = useAuth();
+  const [isVisible, setIsVisible] = useState(false);
+  const [notificationSectionVisible, setNotificationSectionVisible] = useState(false);
+  const [initialNotificationsLoaded, setInitialNotificationsLoaded] = useState(false);
+
+  // 통계 애니메이션
+  const activeUsers = useCountUp(1247, { duration: 2500, suffix: '+' });
+  const completedAuctions = useCountUp(5832, { duration: 3000 });
+  const totalValue = useCountUp(2.1, { duration: 3500, suffix: 'B', prefix: '₩' });
+  const satisfaction = useCountUp(99.8, { duration: 4000, suffix: '%' });
+
+  useEffect(() => {
+    // 페이지 로드 후 순차적으로 애니메이션 시작
+    const timer1 = setTimeout(() => setIsVisible(true), 500);
+    const timer2 = setTimeout(() => setNotificationSectionVisible(true), 1400); // 통계 진행 중에
+    const timer3 = setTimeout(() => setInitialNotificationsLoaded(true), 1900); // 섹션 나타난 후
+    
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+      clearTimeout(timer3);
+    };
+  }, []);
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-yellow-50">
@@ -15,9 +40,11 @@ export const Landing: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-4">
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-yellow-500 to-amber-500 bg-clip-text text-transparent">
-                Gravy
-              </h1>
+              <Link to="/">
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-yellow-500 to-amber-500 bg-clip-text text-transparent hover:opacity-80 transition-opacity cursor-pointer">
+                  Gravy
+                </h1>
+              </Link>
               <span className="text-gray-400">|</span>
               <span className="text-gray-600">실시간 경매 거래</span>
             </div>
@@ -110,24 +137,30 @@ export const Landing: React.FC = () => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-yellow-600 mb-2">1,247+</div>
+            <div className={`text-center transform transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`} style={{ transitionDelay: '0ms' }}>
+              <div className="text-3xl font-bold text-yellow-600 mb-2">{activeUsers}</div>
               <div className="text-gray-600">활성 사용자</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-green-600 mb-2">5,832</div>
+            <div className={`text-center transform transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`} style={{ transitionDelay: '200ms' }}>
+              <div className="text-3xl font-bold text-green-600 mb-2">{completedAuctions}</div>
               <div className="text-gray-600">완료된 경매</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-blue-600 mb-2">₩2.1B</div>
+            <div className={`text-center transform transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`} style={{ transitionDelay: '400ms' }}>
+              <div className="text-3xl font-bold text-blue-600 mb-2">{totalValue}</div>
               <div className="text-gray-600">총 거래액</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-purple-600 mb-2">99.8%</div>
+            <div className={`text-center transform transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`} style={{ transitionDelay: '600ms' }}>
+              <div className="text-3xl font-bold text-purple-600 mb-2">{satisfaction}</div>
               <div className="text-gray-600">만족도</div>
             </div>
           </div>
         </div>
+
+        {/* 실시간 알림 섹션 */}
+        <LandingNotificationSection 
+          isVisible={notificationSectionVisible}
+          isLoaded={initialNotificationsLoaded}
+        />
 
         {/* 개발 진행 상황 */}
         <div className="text-center bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-12">

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useRef, ReactNode } from 'react';
-import { AuthContextType, User, LoginResponse } from '../types/auth';
+import { AuthContextType, User } from '../types/auth';
 import { logout as apiLogout } from '../services/api';
 
 const BASE_URL = import.meta.env.DEV ? 'http://localhost:8080' : 'https://dev.gravy.kr';
@@ -58,7 +58,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     checkAuthStatus();
   }, []);  
 
-  const login = (tokens: LoginResponse) => {
+  const login = () => {
     // 서버에서 HttpOnly 쿠키로 토큰을 설정했으므로
     // 클라이언트는 단순히 사용자 상태만 업데이트
     setUser({ nickname: '사용자', email: 'user@example.com' });

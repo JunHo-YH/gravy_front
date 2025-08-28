@@ -51,7 +51,7 @@ export interface User {
 export interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
-  login: (tokens: LoginResponse) => void;
+  login: () => void;
   logout: () => void;
   loading: boolean;
 }

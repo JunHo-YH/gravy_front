@@ -14,14 +14,14 @@ export default defineConfig({
           console.log('🔄 Vite 프록시 rewrite:', path, '->', path.replace(/^\/api/, ''));
           return path.replace(/^\/api/, '');
         },
-        configure: (proxy, _options) => {
-          proxy.on('error', (err, _req, _res) => {
+        configure: (proxy) => {
+          proxy.on('error', (err) => {
             console.log('❌ Vite 프록시 에러:', err);
           });
-          proxy.on('proxyReq', (proxyReq, req, _res) => {
+          proxy.on('proxyReq', (proxyReq, req) => {
             console.log('➡️ Vite 프록시 요청:', req.method, req.url, '->', proxyReq.path);
           });
-          proxy.on('proxyRes', (proxyRes, req, _res) => {
+          proxy.on('proxyRes', (proxyRes, req) => {
             console.log('⬅️ Vite 프록시 응답:', req.url, proxyRes.statusCode);
           });
         }
