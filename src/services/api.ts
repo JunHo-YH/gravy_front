@@ -281,7 +281,7 @@ export const testAuthToken = async (): Promise<void> => {
 
 export const sendChatMessage = async (message: string): Promise<string> => {
   console.log('🤖 챗봇 메시지 전송:', message);
-  const response = await apiCall('/api/v1/chat', {
+  const response = await apiCall('/api/v1/chatbot', {
     method: 'POST',
     body: JSON.stringify({ question: message })
   });
