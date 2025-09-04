@@ -9,6 +9,14 @@ import {
   ErrorResponse
 } from '../types/auth';
 
+import {
+  AuctionRegisterRequest,
+  AuctionRegisterResponse,
+  AuctionListRequest,
+  AuctionListResponse,
+  AuctionDetailResponse
+} from '../types/auction';
+
 const BASE_URL = import.meta.env.DEV ? 'http://localhost:8080' : 'https://dev.gravy.kr';
 
 export class ApiError extends Error {
@@ -299,5 +307,43 @@ export const sendChatMessage = async (message: string): Promise<string> => {
   }
   
   return '죄송합니다. 응답을 처리하는 중 문제가 발생했습니다.';
+};
+
+export const registerAuction = async (request: AuctionRegisterRequest): Promise<AuctionRegisterResponse> => {
+  console.log('🔨 경매 등록 요청:', request);
+  const response = await apiCall('/api/v1/auctions', {
+    method: 'POST',
+    body: JSON.stringify(request)
+  });
+  
+  console.log('🔨 경매 등록 응답:', response.status, response.statusText);
+  return handleResponse<AuctionRegisterResponse>(response);
+};
+
+export const getAuctionList = async (request: AuctionListRequest): Promise<AuctionListResponse> => {
+  const params = new URLSearchParams();
+  if (request.category) params.append('category', request.category);
+  if (request.status) params.append('status', request.status);
+  if (request.searchKeyword) params.append('searchKeyword', request.searchKeyword);
+  params.append('page', request.page.toString());
+  params.append('size', request.size.toString());
+  
+  console.log('📋 경매 목록 조회:', request);
+  const response = await apiCall(`/api/v1/auctions?${params.toString()}`, {
+    method: 'GET'
+  });
+  
+  console.log('📋 경매 목록 응답:', response.status, response.statusText);
+  return handleResponse<AuctionListResponse>(response);
+};
+
+export const getAuctionDetail = async (auctionPublicId: string): Promise<AuctionDetailResponse> => {
+  console.log('🔍 경매 상세 조회:', auctionPublicId);
+  const response = await apiCall(`/api/v1/auctions/${auctionPublicId}`, {
+    method: 'GET'
+  });
+  
+  console.log('🔍 경매 상세 응답:', response.status, response.statusText);
+  return handleResponse<AuctionDetailResponse>(response);
 };
 
