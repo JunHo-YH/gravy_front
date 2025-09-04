@@ -5,12 +5,15 @@ import { LogOut, Gavel, TrendingUp, Users, Clock, TestTube } from 'lucide-react'
 import { Button } from '../components/common/Button';
 import { Card } from '../components/common/Card';
 import { NotificationSection } from '../components/common/NotificationSection';
+import { ChatBotButton } from '../components/common/ChatBotButton';
+import { ChatBotModal } from '../components/common/ChatBotModal';
 import { useCountUp } from '../hooks/useCountUp';
-import { testAuthToken } from '../services/api';
+import { testAuthToken, sendChatMessage } from '../services/api';
 
 export const Dashboard: React.FC = () => {
   const { user, logout } = useAuth();
   const [isTestLoading, setIsTestLoading] = useState(false);
+  const [isChatModalOpen, setIsChatModalOpen] = useState(false);
 
   // 대시보드 통계 애니메이션
   const activeAuctions = useCountUp(24, { duration: 1800 });
@@ -28,6 +31,15 @@ export const Dashboard: React.FC = () => {
       alert('❌ 토큰 전달 테스트 실패: ' + (error instanceof Error ? error.message : '알 수 없는 오류'));
     } finally {
       setIsTestLoading(false);
+    }
+  };
+
+  const handleChatSendMessage = async (message: string): Promise<string> => {
+    try {
+      return await sendChatMessage(message);
+    } catch (error) {
+      console.error('챗봇 메시지 전송 에러:', error);
+      throw error;
     }
   };
 
@@ -160,6 +172,16 @@ export const Dashboard: React.FC = () => {
           </div>
         </Card>
       </main>
+
+      {/* 챗봇 버튼 */}
+      <ChatBotButton onClick={() => setIsChatModalOpen(true)} />
+
+      {/* 챗봇 모달 */}
+      <ChatBotModal
+        isOpen={isChatModalOpen}
+        onClose={() => setIsChatModalOpen(false)}
+        onSendMessage={handleChatSendMessage}
+      />
     </div>
   );
 };

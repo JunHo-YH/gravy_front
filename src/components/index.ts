@@ -7,6 +7,8 @@ export * from './common/NotificationCard';
 export * from './common/NotificationSection';
 export * from './common/ProtectedRoute';
 export * from './common/PublicRoute';
+export * from './common/ChatBotButton';
+export * from './common/ChatBotModal';
 export * from './landing/LandingNotificationSection';
 export * from './auth/SignUpStep1';
 export * from './auth/SignUpStep2';
