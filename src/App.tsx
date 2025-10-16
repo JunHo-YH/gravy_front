@@ -7,6 +7,8 @@ import { Landing } from './pages/Landing';
 import { Dashboard } from './pages/Dashboard';
 import { Login } from './pages/Login';
 import { SignUp } from './pages/SignUp';
+import { AuctionListPage } from './pages/AuctionListPage';
+import { AuctionRegisterPage } from './pages/AuctionRegisterPage';
 
 function App() {
   return (
@@ -26,14 +28,24 @@ function App() {
                 <SignUp />
               </PublicRoute>
             } />
-            
+
             {/* 보호된 경로 */}
             <Route path="/dashboard" element={
               <ProtectedRoute>
                 <Dashboard />
               </ProtectedRoute>
             } />
-            
+            <Route path="/auctions" element={
+              <ProtectedRoute>
+                <AuctionListPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/auctions/register" element={
+              <ProtectedRoute>
+                <AuctionRegisterPage />
+              </ProtectedRoute>
+            } />
+
             {/* 기본 리다이렉트 */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

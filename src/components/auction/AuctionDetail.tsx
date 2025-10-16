@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Card } from '../common/Card';
 import { Button } from '../common/Button';
 import { LoadingSpinner } from '../common/LoadingSpinner';
-import { getAuctionDetail } from '../../services/api';
-import { AuctionDetailResponse, AuctionStatus } from '../../types/auction';
 
 interface AuctionDetailProps {
   auctionPublicId: string;
@@ -11,7 +9,7 @@ interface AuctionDetailProps {
 
 export const AuctionDetail: React.FC<AuctionDetailProps> = ({ auctionPublicId }) => {
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [,] = useState<string | null>(null);
 
   useEffect(() => {
     // 임시로 로딩 시뮬레이션

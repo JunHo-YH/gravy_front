@@ -11,7 +11,6 @@ import {
 
 import {
   AuctionRegisterRequest,
-  AuctionRegisterResponse,
   AuctionListRequest,
   AuctionListResponse,
   AuctionDetailResponse
@@ -58,7 +57,7 @@ const refreshAccessToken = async (): Promise<boolean> => {
       try {
         const errorText = await response.text();
         console.log('❌ 갱신 실패 응답 본문:', errorText);
-      } catch (e) {
+      } catch {
         console.log('❌ 갱신 실패 응답 본문 읽기 실패');
       }
       return false;
@@ -76,15 +75,21 @@ const apiCall = async (url: string, options: RequestInit = {}, isRetry: boolean 
   if (options.body) {
     console.log('요청 데이터:', options.body);
   }
-  
+
   try {
+    // FormData인 경우 Content-Type을 자동으로 설정하도록 함
+    const isFormData = options.body instanceof FormData;
+    const headers: HeadersInit = isFormData
+      ? { ...options.headers } // FormData는 Content-Type 자동 설정
+      : {
+          'Content-Type': 'application/json',
+          ...options.headers
+        };
+
     const response = await fetch(fullUrl, {
       ...options,
       credentials: 'include', // 쿠키 포함 및 CORS 쿠키 설정 허용
-      headers: {
-        'Content-Type': 'application/json',
-        ...options.headers
-      }
+      headers
     });
 
     console.log(`API 응답: ${response.status} ${response.statusText}`);
@@ -296,7 +301,7 @@ export const sendChatMessage = async (message: string): Promise<string> => {
   
   console.log('🤖 챗봇 응답:', response.status, response.statusText);
   
-  const result = await handleResponse<{ data: any }>(response);
+  const result = await handleResponse<{ data: unknown }>(response);
   console.log('🤖 서버 응답 데이터:', result);
   
   // 서버에서 JsonNode data로 반환하므로 data 필드에서 응답을 추출
@@ -309,30 +314,55 @@ export const sendChatMessage = async (message: string): Promise<string> => {
   return '죄송합니다. 응답을 처리하는 중 문제가 발생했습니다.';
 };
 
-export const registerAuction = async (request: AuctionRegisterRequest): Promise<AuctionRegisterResponse> => {
+export const registerAuction = async (request: AuctionRegisterRequest, images?: File[]): Promise<void> => {
   console.log('🔨 경매 등록 요청:', request);
+  console.log('📸 이미지 파일:', images?.length || 0, '개');
+
+  // FormData 생성
+  const formData = new FormData();
+
+  // @ModelAttribute는 개별 필드로 전송해야 함
+  formData.append('title', request.title);
+  formData.append('description', request.description);
+  formData.append('category', request.category);
+  formData.append('startingPrice', request.startingPrice.toString());
+  formData.append('minBidIncrement', request.minBidIncrement.toString());
+  formData.append('auctionStartTime', request.auctionStartTime);
+  formData.append('auctionEndTime', request.auctionEndTime);
+
+  // 이미지 파일 추가 (순서대로)
+  if (images && images.length > 0) {
+    images.forEach((file) => {
+      formData.append('image', file);
+    });
+  }
+
   const response = await apiCall('/api/v1/auctions', {
     method: 'POST',
-    body: JSON.stringify(request)
+    body: formData,
+    headers: {} // Content-Type을 자동으로 설정하기 위해 빈 객체로 덮어씀
   });
-  
+
   console.log('🔨 경매 등록 응답:', response.status, response.statusText);
-  return handleResponse<AuctionRegisterResponse>(response);
+
+  if (response.status === 201) {
+    console.log('✅ 경매 등록 성공');
+    return;
+  }
+
+  return handleResponse<void>(response);
 };
 
 export const getAuctionList = async (request: AuctionListRequest): Promise<AuctionListResponse> => {
   const params = new URLSearchParams();
-  if (request.category) params.append('category', request.category);
-  if (request.status) params.append('status', request.status);
-  if (request.searchKeyword) params.append('searchKeyword', request.searchKeyword);
   params.append('page', request.page.toString());
   params.append('size', request.size.toString());
-  
+
   console.log('📋 경매 목록 조회:', request);
   const response = await apiCall(`/api/v1/auctions?${params.toString()}`, {
     method: 'GET'
   });
-  
+
   console.log('📋 경매 목록 응답:', response.status, response.statusText);
   return handleResponse<AuctionListResponse>(response);
 };

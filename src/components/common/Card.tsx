@@ -4,12 +4,16 @@ interface CardProps {
   children: React.ReactNode;
   className?: string;
   padding?: 'none' | 'sm' | 'md' | 'lg';
+  onClick?: () => void;
+  onMouseEnter?: () => void;
 }
 
-export const Card: React.FC<CardProps> = ({ 
-  children, 
-  className = '', 
-  padding = 'md' 
+export const Card: React.FC<CardProps> = ({
+  children,
+  className = '',
+  padding = 'md',
+  onClick,
+  onMouseEnter
 }) => {
   const paddingClasses = {
     none: '',
@@ -19,11 +23,15 @@ export const Card: React.FC<CardProps> = ({
   };
 
   return (
-    <div className={`
-      bg-white rounded-xl shadow-md border border-gray-100 
-      transition-shadow duration-200 hover:shadow-lg 
-      ${paddingClasses[padding]} ${className}
-    `}>
+    <div
+      className={`
+        rounded-xl shadow-md overflow-hidden
+        transition-shadow duration-200 hover:shadow-lg
+        ${paddingClasses[padding]} ${className}
+      `}
+      onClick={onClick}
+      onMouseEnter={onMouseEnter}
+    >
       {children}
     </div>
   );

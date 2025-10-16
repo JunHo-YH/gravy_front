@@ -54,24 +54,24 @@ export const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-yellow-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-black flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <Link to="/">
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-yellow-500 to-amber-500 bg-clip-text text-transparent mb-2 hover:opacity-80 transition-opacity cursor-pointer">
-              Gravy
+            <h1 className="text-3xl font-black bg-gradient-to-r from-red-500 to-red-600 bg-clip-text text-transparent mb-2 hover:from-red-400 hover:to-red-500 transition-all duration-300 cursor-pointer">
+              GRAVY
             </h1>
           </Link>
-          <p className="text-gray-600">실시간 경매 거래 플랫폼</p>
+          <p className="text-gray-400 text-sm font-medium tracking-wide">REAL-TIME AUCTION PLATFORM</p>
         </div>
 
-        <Card>
+        <Card className="bg-gradient-to-br from-gray-900 via-black to-gray-900 border-2 border-red-900/30 shadow-2xl">
           <div className="text-center mb-6">
-            <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 bg-gradient-to-br from-red-600 to-red-700 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-red-900/50">
               <LogIn className="w-8 h-8 text-white" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">로그인</h2>
-            <p className="text-gray-600">
+            <h2 className="text-2xl font-black text-white mb-2">로그인</h2>
+            <p className="text-gray-400">
               계정에 로그인하여 경매에 참여해보세요
             </p>
           </div>
@@ -125,18 +125,18 @@ export const Login: React.FC = () => {
 
           <div className="mt-6 text-center space-y-4">
             <div className="flex items-center">
-              <div className="flex-1 border-t border-gray-200"></div>
-              <span className="px-4 text-sm text-gray-500">또는</span>
-              <div className="flex-1 border-t border-gray-200"></div>
+              <div className="flex-1 border-t border-gray-800"></div>
+              <span className="px-4 text-sm text-gray-600">또는</span>
+              <div className="flex-1 border-t border-gray-800"></div>
             </div>
 
             <div className="space-y-2">
-              <a href="/forgot-password" className="block text-sm text-blue-600 hover:text-blue-700">
+              <a href="/forgot-password" className="block text-sm text-red-500 hover:text-red-400 font-medium transition-colors">
                 비밀번호를 잊으셨나요?
               </a>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-500">
                 계정이 없으신가요?{' '}
-                <a href="/signup" className="text-blue-600 hover:text-blue-700 font-medium">
+                <a href="/signup" className="text-red-500 hover:text-red-400 font-bold transition-colors">
                   회원가입하기
                 </a>
               </p>
