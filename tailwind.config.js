@@ -45,7 +45,7 @@ export default {
         blink2: 'blink2 1s ease-in-out',
         borderFlow: 'borderFlow 3s linear infinite',
         policeLine: 'policeLine 20s linear infinite',
-        sendingArrow: 'sendingArrow 1s linear infinite',
+        sendingArrow: 'sendingArrow 2s linear infinite',
         flyEmail: 'flyEmail 2s ease-in-out infinite',
       },
     },
