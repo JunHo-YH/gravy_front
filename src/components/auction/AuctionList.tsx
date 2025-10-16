@@ -60,8 +60,8 @@ export const AuctionList: React.FC<AuctionListProps> = ({
     return (
       <div className="space-y-8">
         {/* 로딩 상태의 상태 요약 스켈레톤 */}
-        <div className="bg-gradient-to-br from-gray-900 to-black p-6 rounded-xl border border-gray-800 animate-pulse">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+        <div className="bg-gradient-to-br from-gray-900 to-black p-4 sm:p-6 rounded-xl border border-gray-800 animate-pulse">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 text-center">
             {[1, 2, 3, 4].map((i) => (
               <div key={i}>
                 <div className="h-8 bg-gray-800 rounded-lg mb-2"></div>
@@ -72,7 +72,7 @@ export const AuctionList: React.FC<AuctionListProps> = ({
         </div>
 
         {/* 로딩 카드들 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
           {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
             <Card key={i} className="animate-pulse bg-gradient-to-br from-gray-900 to-black border-2 border-gray-800" padding="none">
               <div className="p-6 space-y-4">
@@ -177,7 +177,7 @@ export const AuctionList: React.FC<AuctionListProps> = ({
       </div>
 
       {/* 경매 카드들 */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
         {auctions.map((auction) => (
           <AuctionCard
             key={auction.id}

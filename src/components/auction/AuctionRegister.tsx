@@ -276,7 +276,7 @@ export const AuctionRegister: React.FC<AuctionRegisterProps> = ({
           </div>
 
           {/* 가격 정보 - 같은 행 */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
             <div>
               <Input
                 label="💰 시작 가격 (원) *"
@@ -312,7 +312,7 @@ export const AuctionRegister: React.FC<AuctionRegisterProps> = ({
           </p>
 
           {/* 시간 정보 - 같은 행 */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
             <div>
               <Input
                 label="🕐 경매 시작 시간 *"
@@ -346,7 +346,7 @@ export const AuctionRegister: React.FC<AuctionRegisterProps> = ({
 
             {/* 이미지 미리보기 */}
             {images.length > 0 && (
-              <div className="grid grid-cols-3 gap-4 mb-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 mb-4">
                 {images.map((image, index) => (
                   <div
                     key={image.id}
