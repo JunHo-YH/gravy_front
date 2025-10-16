@@ -54,24 +54,37 @@ export const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen bg-black flex items-center justify-center p-4 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-radial from-red-950/10 via-black to-black"></div>
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-red-900/5 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-red-800/5 rounded-full blur-3xl"></div>
+
+      <div className="w-full max-w-md relative z-10">
         <div className="text-center mb-8">
           <Link to="/">
-            <h1 className="text-3xl font-black bg-gradient-to-r from-red-500 to-red-600 bg-clip-text text-transparent mb-2 hover:from-red-400 hover:to-red-500 transition-all duration-300 cursor-pointer">
-              GRAVY
-            </h1>
+            <div className="relative inline-block">
+              <div className="absolute -inset-4 bg-red-600/20 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+              <div className="absolute -inset-2 bg-red-500/10 blur-xl rounded-full"></div>
+
+              <h1 className="relative text-4xl font-black bg-gradient-to-r from-gray-400 via-gray-200 to-gray-400 hover:from-red-600 hover:via-red-400 hover:to-red-600 bg-clip-text text-transparent mb-2 transition-all duration-700 cursor-pointer tracking-[0.2em] group">
+                GRAVY
+              </h1>
+            </div>
           </Link>
-          <p className="text-gray-400 text-sm font-medium tracking-wide">REAL-TIME AUCTION PLATFORM</p>
+          <p className="text-gray-500 text-xs font-bold tracking-[0.3em] uppercase">Real-Time Auction Platform</p>
         </div>
 
-        <Card className="bg-gradient-to-br from-gray-900 via-black to-gray-900 border-2 border-red-900/30 shadow-2xl">
+        <Card className="bg-gradient-to-br from-gray-950 via-black to-gray-950 border-2 border-gray-800 shadow-2xl shadow-red-900/20 hover:border-gray-700 hover:shadow-red-900/30 transition-all duration-500">
           <div className="text-center mb-6">
-            <div className="w-16 h-16 bg-gradient-to-br from-red-600 to-red-700 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-red-900/50">
-              <LogIn className="w-8 h-8 text-white" />
+            <div className="relative w-20 h-20 mx-auto mb-4">
+              <div className="absolute inset-0 bg-gradient-to-br from-red-600/30 to-red-900/30 rounded-2xl blur-xl"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 to-red-800/20 rounded-2xl blur-md"></div>
+              <div className="relative w-full h-full bg-gradient-to-br from-gray-900 via-black to-gray-900 border-2 border-gray-700 rounded-2xl flex items-center justify-center shadow-xl">
+                <LogIn className="w-9 h-9 text-red-500" />
+              </div>
             </div>
-            <h2 className="text-2xl font-black text-white mb-2">로그인</h2>
-            <p className="text-gray-400">
+            <h2 className="text-2xl font-black text-white mb-2 tracking-tight">로그인</h2>
+            <p className="text-gray-500 text-sm">
               계정에 로그인하여 경매에 참여해보세요
             </p>
           </div>
@@ -109,8 +122,8 @@ export const Login: React.FC = () => {
             </div>
 
             {serverError && (
-              <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-                <p className="text-sm text-red-600">{serverError}</p>
+              <div className="p-3 bg-red-950/30 border-2 border-red-800/50 rounded-lg backdrop-blur-sm">
+                <p className="text-sm text-red-400 font-medium">{serverError}</p>
               </div>
             )}
 
@@ -126,17 +139,17 @@ export const Login: React.FC = () => {
           <div className="mt-6 text-center space-y-4">
             <div className="flex items-center">
               <div className="flex-1 border-t border-gray-800"></div>
-              <span className="px-4 text-sm text-gray-600">또는</span>
+              <span className="px-4 text-sm text-gray-600 font-medium">또는</span>
               <div className="flex-1 border-t border-gray-800"></div>
             </div>
 
             <div className="space-y-2">
-              <a href="/forgot-password" className="block text-sm text-red-500 hover:text-red-400 font-medium transition-colors">
+              <a href="/forgot-password" className="block text-sm text-red-500 hover:text-red-400 font-bold transition-all duration-300 hover:tracking-wide">
                 비밀번호를 잊으셨나요?
               </a>
               <p className="text-sm text-gray-500">
                 계정이 없으신가요?{' '}
-                <a href="/signup" className="text-red-500 hover:text-red-400 font-bold transition-colors">
+                <a href="/signup" className="text-red-500 hover:text-red-400 font-black transition-all duration-300 hover:tracking-wide">
                   회원가입하기
                 </a>
               </p>

@@ -67,11 +67,15 @@ export const SignUpStep1: React.FC<SignUpStep1Props> = ({ onNext, initialEmail =
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <div className="w-16 h-16 bg-gradient-to-br from-yellow-400 to-amber-500 rounded-full flex items-center justify-center mx-auto mb-4">
-          <Mail className="w-8 h-8 text-white" />
+        <div className="relative w-20 h-20 mx-auto mb-4">
+          <div className="absolute inset-0 bg-gradient-to-br from-red-600/30 to-red-900/30 rounded-2xl blur-xl"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 to-red-800/20 rounded-2xl blur-md"></div>
+          <div className="relative w-full h-full bg-gradient-to-br from-gray-900 via-black to-gray-900 border-2 border-gray-700 rounded-2xl flex items-center justify-center shadow-xl">
+            <Mail className="w-9 h-9 text-red-500" />
+          </div>
         </div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">이메일 인증</h2>
-        <p className="text-gray-600">
+        <h2 className="text-2xl font-black text-white mb-2 tracking-tight">이메일 인증</h2>
+        <p className="text-gray-500 text-sm">
           가입할 이메일 주소를 입력하면 인증번호를 발송해드립니다
         </p>
       </div>
@@ -85,14 +89,15 @@ export const SignUpStep1: React.FC<SignUpStep1Props> = ({ onNext, initialEmail =
           error={errors.email?.message}
           autoComplete="email"
           autoFocus
+          disabled={loading}
         />
 
         {serverError && (
-          <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-sm text-red-600">{serverError}</p>
+          <div className="p-3 bg-red-950/30 border-2 border-red-800/50 rounded-lg backdrop-blur-sm">
+            <p className="text-sm text-red-400 font-medium">{serverError}</p>
             <details className="mt-2">
-              <summary className="text-xs text-gray-500 cursor-pointer">기술적 세부사항</summary>
-              <p className="text-xs text-gray-400 mt-1">
+              <summary className="text-xs text-gray-600 cursor-pointer hover:text-gray-500 transition-colors">기술적 세부사항</summary>
+              <p className="text-xs text-gray-500 mt-1">
                 문제가 지속되면 개발자 도구(F12)의 Console 탭을 확인해주세요.
               </p>
             </details>
@@ -102,10 +107,19 @@ export const SignUpStep1: React.FC<SignUpStep1Props> = ({ onNext, initialEmail =
         <Button
           type="submit"
           loading={loading}
-          className="w-full group"
+          className="w-full group relative overflow-hidden"
         >
-          인증번호 발송
-          <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+          {loading ? (
+            <span className="flex items-center justify-center gap-3">
+              <span className="relative inline-flex overflow-hidden w-32 h-8 items-center">
+                <span className="animate-sendingArrow whitespace-nowrap text-3xl font-black text-white tracking-wide">
+                  ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸
+                </span>
+              </span>
+              <span className="font-black text-white">발송 중</span>
+            </span>
+          ) : '인증번호 발송'}
+          {!loading && <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />}
         </Button>
       </form>
 

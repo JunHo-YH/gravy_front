@@ -98,12 +98,16 @@ export const SignUpStep2: React.FC<SignUpStep2Props> = ({ email, onNext, onBack 
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
-          <Shield className="w-8 h-8 text-white" />
+        <div className="relative w-20 h-20 mx-auto mb-4">
+          <div className="absolute inset-0 bg-gradient-to-br from-red-600/30 to-red-900/30 rounded-2xl blur-xl"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 to-red-800/20 rounded-2xl blur-md"></div>
+          <div className="relative w-full h-full bg-gradient-to-br from-gray-900 via-black to-gray-900 border-2 border-gray-700 rounded-2xl flex items-center justify-center shadow-xl">
+            <Shield className="w-9 h-9 text-red-500" />
+          </div>
         </div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">인증번호 확인</h2>
-        <p className="text-gray-600 mb-2">
-          <span className="font-semibold text-gray-900">{email}</span>로 발송된<br />
+        <h2 className="text-2xl font-black text-white mb-2 tracking-tight">인증번호 확인</h2>
+        <p className="text-gray-500 mb-2">
+          <span className="font-semibold text-white">{email}</span>로 발송된<br />
           6자리 인증번호를 입력해주세요
         </p>
         <div className="flex items-center justify-center space-x-2">
@@ -130,8 +134,8 @@ export const SignUpStep2: React.FC<SignUpStep2Props> = ({ email, onNext, onBack 
         />
 
         {serverError && (
-          <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-sm text-red-600">{serverError}</p>
+          <div className="p-3 bg-red-950/30 border-2 border-red-800/50 rounded-lg">
+            <p className="text-sm text-red-400 font-medium">{serverError}</p>
           </div>
         )}
 

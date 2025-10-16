@@ -37,22 +37,22 @@ export const SignUp: React.FC = () => {
         {[1, 2, 3].map((step, index) => (
           <React.Fragment key={step}>
             <div className={`
-              w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-all duration-200
-              ${currentStep >= step ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-500'}
-              ${currentStep === step ? 'ring-4 ring-blue-100' : ''}
+              w-10 h-10 rounded-full flex items-center justify-center text-sm font-black transition-all duration-300
+              ${currentStep >= step ? 'bg-gradient-to-br from-red-600 to-red-700 text-white shadow-lg shadow-red-900/50' : 'bg-gray-900 text-gray-600 border-2 border-gray-800'}
+              ${currentStep === step ? 'ring-4 ring-red-900/30 scale-110' : ''}
             `}>
               {currentStep > step ? <CheckCircle className="w-5 h-5" /> : step}
             </div>
             {index < 2 && (
               <div className={`
-                flex-1 h-1 mx-2 transition-all duration-200
-                ${currentStep > step ? 'bg-blue-600' : 'bg-gray-200'}
+                flex-1 h-1 mx-2 transition-all duration-300 rounded-full
+                ${currentStep > step ? 'bg-gradient-to-r from-red-600 to-red-700' : 'bg-gray-800'}
               `} />
             )}
           </React.Fragment>
         ))}
       </div>
-      <div className="flex justify-between text-xs text-gray-500">
+      <div className="flex justify-between text-xs text-gray-500 font-bold tracking-wide">
         <span>이메일 인증</span>
         <span>인증번호 확인</span>
         <span>계정 생성</span>
@@ -61,18 +61,27 @@ export const SignUp: React.FC = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-yellow-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen bg-black flex items-center justify-center p-4 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-radial from-red-950/10 via-black to-black"></div>
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-red-900/5 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-red-800/5 rounded-full blur-3xl"></div>
+
+      <div className="w-full max-w-md relative z-10">
         <div className="text-center mb-8">
           <Link to="/">
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-yellow-500 to-amber-500 bg-clip-text text-transparent mb-2 hover:opacity-80 transition-opacity cursor-pointer">
-              Gravy
-            </h1>
+            <div className="relative inline-block">
+              <div className="absolute -inset-4 bg-red-600/20 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+              <div className="absolute -inset-2 bg-red-500/10 blur-xl rounded-full"></div>
+
+              <h1 className="relative text-4xl font-black bg-gradient-to-r from-gray-400 via-gray-200 to-gray-400 hover:from-red-600 hover:via-red-400 hover:to-red-600 bg-clip-text text-transparent mb-2 transition-all duration-700 cursor-pointer tracking-[0.2em] group">
+                GRAVY
+              </h1>
+            </div>
           </Link>
-          <p className="text-gray-600">실시간 경매 거래 플랫폼</p>
+          <p className="text-gray-500 text-xs font-bold tracking-[0.3em] uppercase">Real-Time Auction Platform</p>
         </div>
 
-        <Card>
+        <Card className="bg-gradient-to-br from-gray-950 via-black to-gray-950 border-2 border-gray-800 shadow-2xl shadow-red-900/20 hover:border-gray-700 hover:shadow-red-900/30 transition-all duration-500">
           {currentStep <= 3 && renderProgressBar()}
 
           {currentStep === 1 && (
@@ -100,14 +109,18 @@ export const SignUp: React.FC = () => {
 
           {currentStep === 4 && (
             <div className="text-center space-y-6">
-              <div className="w-20 h-20 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center mx-auto">
-                <CheckCircle className="w-12 h-12 text-white" />
+              <div className="relative w-24 h-24 mx-auto">
+                <div className="absolute inset-0 bg-gradient-to-br from-red-600/30 to-red-900/30 rounded-full blur-2xl animate-pulse"></div>
+                <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 to-red-800/20 rounded-full blur-xl"></div>
+                <div className="relative w-full h-full bg-gradient-to-br from-red-600 to-red-700 rounded-full flex items-center justify-center shadow-2xl shadow-red-900/60 border-4 border-red-900">
+                  <CheckCircle className="w-14 h-14 text-white" strokeWidth={3} />
+                </div>
               </div>
-              
+
               <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">가입 완료!</h2>
-                <p className="text-gray-600">
-                  Gravy에 오신 것을 환영합니다!<br />
+                <h2 className="text-3xl font-black text-white mb-3 tracking-tight">가입 완료!</h2>
+                <p className="text-gray-400 text-sm leading-relaxed">
+                  <span className="text-red-500 font-black">GRAVY</span>에 오신 것을 환영합니다!<br />
                   지금 바로 경매에 참여해보세요
                 </p>
               </div>
