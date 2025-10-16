@@ -51,7 +51,7 @@ export const Landing: React.FC = () => {
 
             <div className="flex items-center space-x-2 sm:space-x-4">
               {loading ? (
-                <div className="w-16 sm:w-20 h-8 bg-gray-200 animate-pulse rounded"></div>
+                <div className="w-16 sm:w-20 h-8 bg-gray-800 animate-pulse rounded"></div>
               ) : isAuthenticated ? (
                 <div className="flex items-center space-x-2 sm:space-x-4">
                   <Link to="/dashboard">
@@ -129,7 +129,7 @@ export const Landing: React.FC = () => {
         </div>
 
         {/* 통계 섹션 */}
-        <div className="bg-gradient-to-br from-gray-900 via-black to-gray-900 rounded-2xl shadow-2xl border-2 border-red-900/30 p-6 sm:p-8 mb-8 sm:mb-12 lg:mb-16">
+        <Card className="bg-gradient-to-br from-gray-900 via-black to-gray-900 border-2 border-gray-800 shadow-2xl mb-8 sm:mb-12 lg:mb-16 p-6 sm:p-8">
           <div className="text-center mb-6 sm:mb-8">
             <h2 className="text-2xl sm:text-3xl font-black mb-4">
               <span className="text-gray-300">한눈에 보는 </span>
@@ -155,13 +155,15 @@ export const Landing: React.FC = () => {
               <div className="text-gray-500 text-xs sm:text-sm font-semibold uppercase tracking-wider">만족도</div>
             </div>
           </div>
-        </div>
+        </Card>
 
         {/* 실시간 알림 섹션 */}
-        <LandingNotificationSection 
-          isVisible={notificationSectionVisible}
-          isLoaded={initialNotificationsLoaded}
-        />
+        <Card className="bg-gradient-to-br from-gray-900 via-black to-gray-900 border-2 border-gray-800 shadow-2xl mb-8 sm:mb-12 lg:mb-16">
+          <LandingNotificationSection
+            isVisible={notificationSectionVisible}
+            isLoaded={initialNotificationsLoaded}
+          />
+        </Card>
 
         {/* 개발 진행 상황 */}
         <div className="text-center bg-gradient-to-br from-red-950/30 via-black to-red-950/30 border-2 border-red-900/40 rounded-2xl p-6 sm:p-8 lg:p-12 shadow-2xl">

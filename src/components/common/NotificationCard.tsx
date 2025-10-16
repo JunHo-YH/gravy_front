@@ -8,14 +8,14 @@ interface NotificationCardProps {
   size?: 'default' | 'small';
 }
 
-export const NotificationCard: React.FC<NotificationCardProps> = ({ 
-  notification, 
+export const NotificationCard: React.FC<NotificationCardProps> = ({
+  notification,
   visibleItem,
   className = '',
   size = 'default'
 }) => {
   let animationClass = 'notification-item';
-  
+
   if (visibleItem.isExiting) {
     animationClass += ' notification-exit';
   } else if (visibleItem.isEntering) {
@@ -32,13 +32,13 @@ export const NotificationCard: React.FC<NotificationCardProps> = ({
   const boldTextClass = isSmall ? 'text-base' : 'text-lg';
 
   return (
-    <div 
+    <div
       key={visibleItem.id}
-      className={`${paddingClass} border rounded-lg shadow-sm ${animationClass} ${
+      className={`${paddingClass} border-2 rounded-lg shadow-xl ${animationClass} ${
         notification.bgColor
       } ${
         notification.borderColor
-      } hover:scale-105 hover:shadow-md ${className}`}
+      } hover:scale-105 hover:shadow-2xl transition-all duration-300 ${className}`}
     >
       <div className={`flex items-start ${spacingClass}`}>
         <span className={`${iconClass} flex-shrink-0`}>{notification.icon}</span>

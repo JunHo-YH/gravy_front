@@ -19,13 +19,13 @@ export const NotificationSection: React.FC<NotificationSectionProps> = ({
     <div className={className}>
       {title && (
         <div className="text-center mb-6">
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">{title}</h3>
+          <h3 className="text-xl font-black bg-gradient-to-r from-red-500 via-red-400 to-red-500 bg-clip-text text-transparent mb-2">{title}</h3>
           {description && (
-            <p className="text-gray-600">{description}</p>
+            <p className="text-gray-400 text-sm">{description}</p>
           )}
         </div>
       )}
-      
+
       <div className="overflow-hidden relative h-64">
         <div className="space-y-3">
           {visibleNotifications.map((item) => {

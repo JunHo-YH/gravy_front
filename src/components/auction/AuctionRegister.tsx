@@ -410,14 +410,14 @@ export const AuctionRegister: React.FC<AuctionRegisterProps> = ({
             </p>
           </div>
 
-          <div className="flex justify-end space-x-4 pt-8 border-t-2 border-gray-800">
+          <div className="flex flex-col sm:flex-row justify-end gap-3 sm:gap-4 pt-6 sm:pt-8 border-t-2 border-gray-800">
             {onCancel && (
               <Button
                 type="button"
                 variant="outline"
                 onClick={onCancel}
                 disabled={loading}
-                className="px-8 py-3 border-2 border-gray-700 hover:border-gray-600 text-gray-300 hover:text-white font-semibold transition-all duration-200"
+                className="w-full sm:w-auto px-6 sm:px-8 py-3 border-2 border-gray-700 hover:border-gray-600 text-gray-300 hover:text-white font-semibold transition-all duration-200"
               >
                 취소
               </Button>
@@ -426,7 +426,7 @@ export const AuctionRegister: React.FC<AuctionRegisterProps> = ({
               type="submit"
               loading={loading}
               disabled={loading}
-              className="px-8 py-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold shadow-lg shadow-red-900/50 hover:shadow-xl hover:shadow-red-900/70 transform hover:scale-105 transition-all duration-200"
+              className="w-full sm:w-auto px-6 sm:px-8 py-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold shadow-lg shadow-red-900/50 hover:shadow-xl hover:shadow-red-900/70 transform hover:scale-105 transition-all duration-200"
             >
               {loading ? '🔄 등록 중...' : '🔨 경매 등록하기'}
             </Button>

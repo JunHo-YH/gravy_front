@@ -76,10 +76,10 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
 
           {/* 사용자 정보 & 액션 */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2 sm:space-x-4">
             {isAuthenticated ? (
               <>
-                <span className="text-gray-300 font-medium hidden sm:block">
+                <span className="text-gray-300 font-medium hidden lg:block">
                   환영합니다, <span className="text-red-500 font-bold">{user?.nickname}</span>님!
                 </span>
                 {showTestButton && (
@@ -88,14 +88,15 @@ export const Header: React.FC<HeaderProps> = ({
                     onClick={onTestClick}
                     size="sm"
                     loading={isTestLoading}
+                    className="whitespace-nowrap"
                   >
-                    <TestTube className="w-4 h-4 mr-2" />
-                    API 테스트
+                    <TestTube className="w-4 h-4 sm:mr-2" />
+                    <span className="hidden sm:inline">API 테스트</span>
                   </Button>
                 )}
-                <Button variant="outline" onClick={() => logout()} size="sm">
-                  <LogOut className="w-4 h-4 mr-2" />
-                  로그아웃
+                <Button variant="outline" onClick={() => logout()} size="sm" className="whitespace-nowrap">
+                  <LogOut className="w-4 h-4 sm:mr-2" />
+                  <span className="hidden sm:inline">로그아웃</span>
                 </Button>
               </>
             ) : (
