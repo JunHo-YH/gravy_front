@@ -4,10 +4,65 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
   helpText?: string;
+  blockKorean?: boolean;
 }
 
+const KOREAN_TO_ENGLISH_MAP: { [key: string]: string } = {
+  // 자음
+  'ㅂ': 'q', 'ㅃ': 'Q',
+  'ㅈ': 'w', 'ㅉ': 'W',
+  'ㄷ': 'e', 'ㄸ': 'E',
+  'ㄱ': 'r', 'ㄲ': 'R',
+  'ㅅ': 't', 'ㅆ': 'T',
+  'ㅛ': 'y', 'ㅕ': 'u', 'ㅑ': 'i',
+  'ㅐ': 'o', 'ㅒ': 'O',
+  'ㅔ': 'p', 'ㅖ': 'P',
+  'ㅁ': 'a',
+  'ㄴ': 's',
+  'ㅇ': 'd',
+  'ㄹ': 'f',
+  'ㅎ': 'g',
+  'ㅗ': 'h', 'ㅘ': 'hk', 'ㅙ': 'ho', 'ㅚ': 'hl',
+  'ㅓ': 'j', 'ㅝ': 'nj', 'ㅞ': 'np', 'ㅟ': 'nl',
+  'ㅏ': 'k',
+  'ㅣ': 'l',
+  'ㅋ': 'z',
+  'ㅌ': 'x',
+  'ㅊ': 'c',
+  'ㅍ': 'v',
+  'ㅠ': 'b',
+  'ㅜ': 'n',
+  'ㅡ': 'm',
+};
+
+const convertKoreanToEnglish = (text: string): string => {
+  return text.split('').map(char => KOREAN_TO_ENGLISH_MAP[char] || char).join('');
+};
+
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, helpText, className = '', ...props }, ref) => {
+  ({ label, error, helpText, className = '', blockKorean = false, onKeyDown, onChange, ...props }, ref) => {
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (blockKorean) {
+        if (e.nativeEvent.isComposing || e.keyCode === 229) {
+          e.preventDefault();
+          return;
+        }
+      }
+      onKeyDown?.(e);
+    };
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (blockKorean) {
+        const originalValue = e.target.value;
+        const convertedValue = convertKoreanToEnglish(originalValue);
+
+        if (originalValue !== convertedValue) {
+          e.target.value = convertedValue;
+        }
+      }
+      onChange?.(e);
+    };
+
     return (
       <div className="w-full">
         {label && (
@@ -29,6 +84,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
                 : 'border-gray-700 hover:border-gray-600 focus:border-red-600'}
               ${className}
             `}
+            onKeyDown={handleKeyDown}
+            onChange={handleChange}
+            onCompositionStart={blockKorean ? (e) => e.preventDefault() : undefined}
+            onCompositionUpdate={blockKorean ? (e) => e.preventDefault() : undefined}
+            onCompositionEnd={blockKorean ? (e) => e.preventDefault() : undefined}
             {...props}
           />
         </div>

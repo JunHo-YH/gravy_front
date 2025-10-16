@@ -140,6 +140,7 @@ export const SignUpStep3: React.FC<SignUpStep3Props> = ({
             placeholder="8자 이상, 대소문자+숫자+특수문자"
             error={errors.password?.message}
             autoComplete="new-password"
+            blockKorean
           />
           <button
             type="button"
@@ -174,6 +175,7 @@ export const SignUpStep3: React.FC<SignUpStep3Props> = ({
             placeholder="비밀번호를 다시 입력해주세요"
             error={errors.confirmPassword?.message}
             autoComplete="new-password"
+            blockKorean
           />
           <button
             type="button"

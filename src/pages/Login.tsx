@@ -99,6 +99,7 @@ export const Login: React.FC = () => {
                 error={errors.email?.message}
                 autoComplete="email"
                 autoFocus
+                blockKorean
               />
               <Mail className="w-5 h-5 text-gray-400 absolute right-3 top-9" />
             </div>
@@ -111,6 +112,7 @@ export const Login: React.FC = () => {
                 placeholder="비밀번호를 입력해주세요"
                 error={errors.password?.message}
                 autoComplete="current-password"
+                blockKorean
               />
               <button
                 type="button"

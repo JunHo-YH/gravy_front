@@ -90,6 +90,7 @@ export const SignUpStep1: React.FC<SignUpStep1Props> = ({ onNext, initialEmail =
           autoComplete="email"
           autoFocus
           disabled={loading}
+          blockKorean
         />
 
         {serverError && (
