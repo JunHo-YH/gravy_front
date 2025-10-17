@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { LogIn, UserPlus, Gavel, TrendingUp, Shield } from 'lucide-react';
+import { LogIn, UserPlus, Gavel, Users, Shield } from 'lucide-react';
 import { Button } from '../components/common/Button';
 import { Card } from '../components/common/Card';
 import { LandingNotificationSection } from '../components/landing/LandingNotificationSection';
@@ -109,7 +109,7 @@ export const Landing: React.FC = () => {
 
           <Card className="text-center p-6 sm:p-8 bg-gradient-to-br from-gray-900 via-black to-gray-900 border-2 border-gray-800 hover:border-red-900/50 transition-all duration-300 shadow-2xl hover:shadow-red-900/20">
             <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-gray-700 to-gray-800 rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-lg">
-              <TrendingUp className="w-6 h-6 sm:w-8 sm:h-8 text-red-500" />
+              <Users className="w-6 h-6 sm:w-8 sm:h-8 text-red-500" />
             </div>
             <h3 className="text-lg sm:text-xl font-bold text-white mb-3 sm:mb-4">투명한 거래</h3>
             <p className="text-sm sm:text-base text-gray-400">

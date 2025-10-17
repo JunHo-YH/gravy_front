@@ -81,7 +81,13 @@ export const SignUp: React.FC = () => {
           <p className="text-gray-500 text-xs font-bold tracking-[0.3em] uppercase">Real-Time Auction Platform</p>
         </div>
 
-        <Card className="bg-gradient-to-br from-gray-950 via-black to-gray-950 border-2 border-gray-800 shadow-2xl shadow-red-900/20 hover:border-gray-700 hover:shadow-red-900/30 transition-all duration-500">
+        <Card className="bg-gradient-to-br from-gray-950 via-black to-gray-950 border-2 border-gray-800 shadow-2xl shadow-red-900/20 transition-all duration-700" onMouseEnter={(e) => {
+          e.currentTarget.style.boxShadow = '0 0 60px 8px rgba(220, 38, 38, 0.4), 0 0 30px 4px rgba(220, 38, 38, 0.3), 0 0 15px 2px rgba(220, 38, 38, 0.2), 0 25px 50px -12px rgba(220, 38, 38, 0.5)';
+          e.currentTarget.style.borderColor = 'rgb(220, 38, 38)';
+        }} onMouseLeave={(e) => {
+          e.currentTarget.style.boxShadow = '';
+          e.currentTarget.style.borderColor = '';
+        }}>
           {currentStep <= 3 && renderProgressBar()}
 
           {currentStep === 1 && (

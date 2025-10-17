@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { Mail, ArrowRight } from 'lucide-react';
+import { Mail, Navigation } from 'lucide-react';
 import { Input } from '../common/Input';
 import { Button } from '../common/Button';
 import { checkEmailDuplicate, sendVerificationCode, ApiError } from '../../services/api';
@@ -39,22 +39,12 @@ export const SignUpStep1: React.FC<SignUpStep1Props> = ({ onNext, initialEmail =
     setServerError('');
 
     try {
-      // 1. 이메일 중복 확인
-      console.log('이메일 중복 확인 시작:', data.email);
       await checkEmailDuplicate({ email: data.email });
-      console.log('이메일 중복 확인 완료');
-      
-      // 2. 인증번호 발송
-      console.log('인증번호 발송 시작:', data.email);
       await sendVerificationCode({ email: data.email });
-      console.log('인증번호 발송 완료');
-      
-      // 3. 다음 단계로 이동
       onNext(data.email);
     } catch (error) {
       console.error('회원가입 1단계 오류:', error);
       if (error instanceof ApiError) {
-        // 서버에서 보내는 메시지를 그대로 사용
         setServerError(error.message || '오류가 발생했습니다.');
       } else {
         setServerError('네트워크 오류가 발생했습니다. 연결을 확인해주세요.');
@@ -111,16 +101,21 @@ export const SignUpStep1: React.FC<SignUpStep1Props> = ({ onNext, initialEmail =
           className="w-full group relative overflow-hidden"
         >
           {loading ? (
-            <span className="flex items-center justify-center gap-3">
-              <span className="relative inline-flex overflow-hidden w-32 h-8 items-center">
-                <span className="animate-sendingArrow whitespace-nowrap text-3xl font-black text-white tracking-wide">
-                  ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸
+            <span className="flex items-center justify-center gap-4">
+              <span className="relative w-40 h-8 flex items-center" style={{overflow: 'hidden'}}>
+                <span className="animate-sendingArrow whitespace-nowrap text-3xl font-black text-white absolute left-0" style={{letterSpacing: '0.5em', top: '-6px'}}>
+                  ▸▸▸▸▸▸▸▸▸▸▸▸▸▸▸▸▸▸▸▸▸▸▸▸▸▸▸▸▸▸
+                </span>
+                <span className="animate-sendingArrow whitespace-nowrap text-3xl font-black text-white absolute left-0" style={{letterSpacing: '0.5em', animationDelay: '-4s', top: '-6px'}}>
+                  ▸▸▸▸▸▸▸▸▸▸▸▸▸▸▸▸▸▸▸▸▸▸▸▸▸▸▸▸▸▸
                 </span>
               </span>
-              <span className="font-black text-white">발송 중</span>
+              <span className="font-black text-white text-lg tracking-wide">발송 중</span>
             </span>
-          ) : '인증번호 발송'}
-          {!loading && <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />}
+          ) : (
+            <span className="font-bold text-lg tracking-wide">인증번호 발송</span>
+          )}
+          {!loading && <Navigation className="w-5 h-5 ml-2 fill-white stroke-white stroke-2 group-hover:translate-x-1 transition-transform" />}
         </Button>
       </form>
 

@@ -35,14 +35,11 @@ export const Login: React.FC = () => {
     setServerError('');
 
     try {
-      console.log('🔐 로그인 시도:', data);
-      const response = await login(data);
-      console.log('✅ 로그인 성공:', response);
+      await login(data);
       authLogin();
-      // navigate 대신 window.location을 사용하여 완전히 새로고침
       window.location.href = '/dashboard';
     } catch (error) {
-      console.error('❌ 로그인 실패:', error);
+      console.error('로그인 실패:', error);
       if (error instanceof ApiError) {
         setServerError(error.message);
       } else {
@@ -74,7 +71,13 @@ export const Login: React.FC = () => {
           <p className="text-gray-500 text-xs font-bold tracking-[0.3em] uppercase">Real-Time Auction Platform</p>
         </div>
 
-        <Card className="bg-gradient-to-br from-gray-950 via-black to-gray-950 border-2 border-gray-800 shadow-2xl shadow-red-900/20 hover:border-gray-700 hover:shadow-red-900/30 transition-all duration-500">
+        <Card className="bg-gradient-to-br from-gray-950 via-black to-gray-950 border-2 border-gray-800 shadow-2xl shadow-red-900/20 transition-all duration-700" onMouseEnter={(e) => {
+          e.currentTarget.style.boxShadow = '0 0 60px 8px rgba(220, 38, 38, 0.4), 0 0 30px 4px rgba(220, 38, 38, 0.3), 0 0 15px 2px rgba(220, 38, 38, 0.2), 0 25px 50px -12px rgba(220, 38, 38, 0.5)';
+          e.currentTarget.style.borderColor = 'rgb(220, 38, 38)';
+        }} onMouseLeave={(e) => {
+          e.currentTarget.style.boxShadow = '';
+          e.currentTarget.style.borderColor = '';
+        }}>
           <div className="text-center mb-6">
             <div className="relative w-20 h-20 mx-auto mb-4">
               <div className="absolute inset-0 bg-gradient-to-br from-red-600/30 to-red-900/30 rounded-2xl blur-xl"></div>
