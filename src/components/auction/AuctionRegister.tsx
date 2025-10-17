@@ -281,8 +281,8 @@ export const AuctionRegister: React.FC<AuctionRegisterProps> = ({
               <Input
                 label="💰 시작 가격 (원) *"
                 type="number"
-                min="1"
-                step="1"
+                min="100"
+                step="100"
                 value={formData.startingPrice || ''}
                 onChange={(e) => handleInputChange('startingPrice', parseInt(e.target.value) || 0)}
                 placeholder="예: 10000"
@@ -295,8 +295,8 @@ export const AuctionRegister: React.FC<AuctionRegisterProps> = ({
               <Input
                 label="⚡ 최소 입찰 단위 (원) *"
                 type="number"
-                min="1"
-                step="1"
+                min="100"
+                step="100"
                 value={formData.minBidIncrement || ''}
                 onChange={(e) => handleInputChange('minBidIncrement', parseInt(e.target.value) || 0)}
                 placeholder="예: 500"

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { LogOut, TestTube, Home, Gavel } from 'lucide-react';
+import { LogOut, TestTube, Home, List, Gavel } from 'lucide-react';
 import { Button } from './Button';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -25,7 +25,10 @@ export const Header: React.FC<HeaderProps> = ({
       return location.pathname === '/dashboard';
     }
     if (path === '/auctions') {
-      return location.pathname.startsWith('/auctions');
+      return location.pathname === '/auctions';
+    }
+    if (path === '/auctions/register') {
+      return location.pathname === '/auctions/register';
     }
     return false;
   };
@@ -49,27 +52,40 @@ export const Header: React.FC<HeaderProps> = ({
                   variant="ghost"
                   size="sm"
                   onClick={() => navigate('/dashboard')}
-                  className={`flex items-center gap-2 ${
+                  className={`flex items-center ${
                     isActive('/dashboard')
                       ? 'text-red-500 border-2 border-red-600'
                       : ''
                   }`}
                 >
-                  <Home className="w-4 h-4" />
+                  <Home className="w-4 h-4 mr-2" />
                   대시보드
                 </Button>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => navigate('/auctions')}
-                  className={`flex items-center gap-2 ${
+                  className={`flex items-center ${
                     isActive('/auctions')
                       ? 'text-red-500 border-2 border-red-600'
                       : ''
                   }`}
                 >
-                  <Gavel className="w-4 h-4" />
+                  <List className="w-4 h-4 mr-2" />
                   경매 목록
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => navigate('/auctions/register')}
+                  className={`flex items-center ${
+                    isActive('/auctions/register')
+                      ? 'text-red-500 border-2 border-red-600'
+                      : ''
+                  }`}
+                >
+                  <Gavel className="w-4 h-4 mr-2" />
+                  경매 등록
                 </Button>
               </nav>
             )}
