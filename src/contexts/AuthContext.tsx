@@ -1,8 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useRef, ReactNode } from 'react';
 import { AuthContextType, User } from '../types/auth';
-import { logout as apiLogout } from '../services/api';
-
-const BASE_URL = import.meta.env.DEV ? 'http://localhost:8080' : 'https://dev.gravy.kr';
+import { logout as apiLogout, testAuthToken, ApiError } from '../services/api';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -24,32 +22,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const hasInitialized = useRef(false);
 
   useEffect(() => {
-    // 이미 초기화되었으면 중복 실행 방지
     if (hasInitialized.current) {
       return;
     }
 
     hasInitialized.current = true;
-    console.log('🔍 AuthContext: 인증 상태 확인 시작 (1회만)');
 
     const checkAuthStatus = async () => {
       try {
-        const response = await fetch(`${BASE_URL}/api/v1/auth/test`, {
-          method: 'POST',
-          credentials: 'include',
-          headers: { 'Content-Type': 'application/json' }
-        });
-
-        if (response.ok) {
-          setUser({ nickname: '사용자', email: 'user@example.com' });
-          console.log('✅ AuthContext: 인증 성공');
+        await testAuthToken();
+        setUser({ nickname: '사용자', email: 'user@example.com' });
+      } catch (error) {
+        if (error instanceof ApiError && error.code === 'TOKEN_EXPIRED') {
+          setUser(null);
         } else {
           setUser(null);
-          console.log('❌ AuthContext: 인증 실패');
         }
-      } catch (error) {
-        console.log('❌ AuthContext: 인증 확인 실패:', error);
-        setUser(null);
       } finally {
         setLoading(false);
       }
@@ -66,13 +54,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const logout = async () => {
     try {
-      // 서버 로그아웃 API 호출 및 쿠키 삭제
       await apiLogout();
       setUser(null);
-      console.log('✅ 로그아웃 완료');
     } catch (error) {
-      console.error('로그아웃 에러:', error);
-      // 에러가 발생해도 로컬 상태는 삭제
       setUser(null);
     }
   };
