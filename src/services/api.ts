@@ -227,7 +227,8 @@ export const sendChatMessage = async (message: string): Promise<string> => {
 
   // 서버에서 JsonNode data로 반환하므로 data 필드에서 응답을 추출
   if (result.data && typeof result.data === 'object') {
-    return result.data.answer || result.data.response || result.data.text || JSON.stringify(result.data);
+    const data = result.data as Record<string, unknown>;
+    return (data.answer as string) || (data.response as string) || (data.text as string) || JSON.stringify(result.data);
   }
 
   return '죄송합니다. 응답을 처리하는 중 문제가 발생했습니다.';
