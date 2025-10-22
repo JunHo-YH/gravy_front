@@ -7,7 +7,7 @@ import { AuctionCard } from './AuctionCard';
 import { useServerTime } from '../../hooks/useServerTime';
 
 interface AuctionListProps {
-  onAuctionClick?: (auctionId: number) => void;
+  onAuctionClick?: (auctionId: string | number) => void;
 }
 
 export const AuctionList: React.FC<AuctionListProps> = ({
@@ -183,7 +183,7 @@ export const AuctionList: React.FC<AuctionListProps> = ({
             key={auction.id}
             auction={auction}
             correctedNow={correctedNow}
-            onClick={() => onAuctionClick?.(auction.id)}
+            onClick={() => onAuctionClick?.(auction.auctionPublicId || auction.id)}
           />
         ))}
       </div>

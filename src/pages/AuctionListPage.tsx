@@ -7,7 +7,7 @@ import { Header } from '../components/common/Header';
 export const AuctionListPage: React.FC = () => {
   const navigate = useNavigate();
 
-  const handleAuctionClick = (auctionId: number) => {
+  const handleAuctionClick = (auctionId: string | number) => {
     navigate(`/auctions/${auctionId}`);
   };
 

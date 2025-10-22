@@ -81,6 +81,7 @@ export interface AuctionListRequest {
 
 export interface AuctionSummary {
   id: number;
+  auctionPublicId?: string;
   title: string;
   category: Category;
   status: AuctionStatus;

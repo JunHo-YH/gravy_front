@@ -9,6 +9,7 @@ import { Login } from './pages/Login';
 import { SignUp } from './pages/SignUp';
 import { AuctionListPage } from './pages/AuctionListPage';
 import { AuctionRegisterPage } from './pages/AuctionRegisterPage';
+import { AuctionDetailPage } from './pages/AuctionDetailPage';
 
 function App() {
   return (
@@ -43,6 +44,11 @@ function App() {
             <Route path="/auctions/register" element={
               <ProtectedRoute>
                 <AuctionRegisterPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/auctions/:auctionId" element={
+              <ProtectedRoute>
+                <AuctionDetailPage />
               </ProtectedRoute>
             } />
 
